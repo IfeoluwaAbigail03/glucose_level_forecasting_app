@@ -1,0 +1,89 @@
+# =====================
+# DO NOT IGNORE THESE:
+# best_glucose_regressor.json  ← Tracked by LFS
+# feature_list.json           ← Tracked by LFS
+# =====================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environment
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+Desktop.ini
+
+# Streamlit
+.streamlit/
+
+# Logs
+*.log
+logs/
+
+# Data files (optional - if you have large data files)
+*.csv
+*.pkl
+*.h5
+*.joblib
+
+# Temporary files
+*.tmp
+*.temp
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Compression files
+*.gz
+*.zip
+*.7z
+
+# LFS tracking file (sometimes generated)
+.lfsconfig
+
+# Ignore virtual environment
+glucose_app/

@@ -1,0 +1,23 @@
+# Glucose Predictor Pro
+
+An AI-powered glucose prediction system with safety monitoring and clinical advisor.
+
+## Features
+
+- **Prediction**: XGBoost model for glucose forecasting
+- **Safety Monitoring**: Detects and flags dangerous predictions (2.64% error cases)
+- **Clinical Advisor**: Rule-based chatbot for medical guidance
+- **Real-time Alerts**: Flags predictions needing human review
+
+## Model Performance
+
+- **Overall MAE**: 0.94 mmol/L
+- **Clinical Accuracy**: 97.36% safe predictions
+- **Dangerous Errors**: 2.64% (monitored and flagged)
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/glucose-predictor-pro.git
+cd glucose-predictor-pro
