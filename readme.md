@@ -19,5 +19,5 @@ An AI-powered glucose prediction system with safety monitoring and clinical advi
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/glucose-predictor-pro.git
-cd glucose-predictor-pro
+git clone https://github.com/IfeoluwaAbigail03/glucose_level_forecasting_app.git
+cd glucose_level_forecasting_app
