@@ -87,3 +87,4 @@ logs/
 
 # Ignore virtual environment
 glucose_app/
+legacy/
