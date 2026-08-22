@@ -3,16 +3,18 @@ The FastAPI app. Loads both model bundles at startup:
   v1 (regression) -> the predicted glucose number + hyper flag
   v2 (classifier) -> the hypo advisory alert
 
-A single /predict call runs both models on the same input and
-combines their outputs into one response.
+A single /predict call runs both models on the same input, combines
+their outputs, and logs the request for later drift monitoring.
 """
 from contextlib import asynccontextmanager
 import xgboost as xgb
 from fastapi import FastAPI, HTTPException
 
+from app.drift_detection import compute_drift_report
 from app.model_loader import load_regression_bundle, load_classifier_bundle
 from app.schemas import GlucosePredictionRequest, GlucosePredictionResponse
 from app.config import V2_ALERT_THRESHOLD
+from app.prediction_log import log_prediction, fetch_recent
 
 reg_bundle = None
 clf_bundle = None
@@ -52,12 +54,10 @@ def _build_dmatrix(row: dict, features: list[str]) -> xgb.DMatrix:
 def predict(req: GlucosePredictionRequest):
     row = req.model_dump()
 
-    # v1: predicted glucose value
     reg_dmatrix = _build_dmatrix(row, reg_bundle.features)
     predicted_bg = float(reg_bundle.booster.predict(reg_dmatrix)[0])
     clinical_flag = "hyper_risk" if predicted_bg > 10.0 else "normal"
 
-    # v2: hypo alert probability
     clf_dmatrix = _build_dmatrix(row, clf_bundle.features)
     hypo_prob = float(clf_bundle.booster.predict(clf_dmatrix)[0])
     hypo_alert = hypo_prob >= V2_ALERT_THRESHOLD
@@ -68,6 +68,13 @@ def predict(req: GlucosePredictionRequest):
         "No elevated hypo risk detected by the advisory model."
     )
 
+    # Log every real prediction — this feeds drift detection later.
+    # Never let a logging failure break the actual prediction response.
+    try:
+        log_prediction(row, predicted_bg, hypo_prob, hypo_alert)
+    except Exception as e:
+        print(f"Prediction logging failed (non-fatal): {e}")
+
     return GlucosePredictionResponse(
         predicted_bg_1h=round(predicted_bg, 2),
         clinical_flag=clinical_flag,
@@ -75,3 +82,8 @@ def predict(req: GlucosePredictionRequest):
         hypo_alert_probability=round(hypo_prob, 3),
         advisory_note=advisory_note,
     )
+
+@app.get("/metrics")
+def metrics():
+    recent = fetch_recent(limit=500)
+    return compute_drift_report(recent)
